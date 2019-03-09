@@ -1,12 +1,16 @@
 <?php
 
-namespace Blog\Http\Controllers;
+namespace Blog\Http\Controllers\Services;
 
 use Illuminate\Http\Request;
 
 class NoticiaController extends Controller
 {
-    public function store(Illuminate\Http\Request $request)
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return mixed
+     */
+    public function store(Request $request)
     {
         $id     = substr(md5(microtime()), 0, 4);
         $titulo = $request->input('titulo');
@@ -16,6 +20,14 @@ class NoticiaController extends Controller
 
         session([$id => $entrada]);
 
-        return route('noticia.show', ['id' => $id]);
+        return route('services.noticia.show', ['id' => $id]);
+    }
+
+    public function show($id){
+        $noticia    = session()->get($id);
+        $titulo     = $noticia['titulo'];
+        $cuerpo     = $noticia['cuerpo'];
+
+        return '<h1>' . $titulo . '</h1><br><p>' . $cuerpo . '</p>';
     }
 }

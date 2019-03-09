@@ -16,3 +16,8 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::name('services.')->group(function () {
+    Route::post('/noticia', 'NoticiaController@store')->name('noticia.store');
+    Route::get('/noticia/{id}', 'NoticiaController@show')->name('noticia.show');
+});

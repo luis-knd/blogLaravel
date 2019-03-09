@@ -21,22 +21,12 @@ Route::get('/hola-mundo', function () {
     return 'Hola Mundo';
 })->name('decir hola');
 
-Route::post('/noticia', function (Illuminate\Http\Request $request) {
-    $id = substr(md5(microtime()), 0, 4);
-    $titulo = $request->input('titulo');
-    $cuerpo = $request->input('cuerpo');
+Route::namespace('Backend')->name('backend.')->prefix('/backend')->group(function () {
+    Route::resource('noticia', 'NoticiaController');
+    Route::resource('categorias', 'CategoriaController');
+});
 
-    $entrada = array('id' => $id, 'titulo' => $titulo, 'cuerpo' => $cuerpo);
-
-    session([$id => $entrada]);
-
-    return route('noticia.show', ['id' => $id]);
-})->name('noticia.store');
-
-Route::get('/noticia/{id}', function ($id) {
-    $noticia = session()->get($id);
-    $titulo = $noticia['titulo'];
-    $cuerpo = $noticia['cuerpo'];
-
-    return '<h1>' . $titulo . '</h1><br><p>' . $cuerpo . '</p>';
-})->name('noticia.show');
+Route::namespace('Frontend')->name('frontend.')->group(function () {
+    Route::post('/noticia', 'NoticiaController@store')->name('noticia.store');
+    Route::get('/noticia/{id}', 'NoticiaController@show')->name('noticia.show');
+});
