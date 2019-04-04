@@ -2,6 +2,7 @@
 
 namespace Blog\Http\Controllers\Backend;
 
+use Blog\Factories\NoticiaFactory;
 use Illuminate\Http\Request;
 
 class NoticiaController extends Controller
@@ -14,7 +15,8 @@ class NoticiaController extends Controller
      */
     public function index()
     {
-        //
+        $listado = NoticiaFactory::generarNoticias(20);
+        return view('backend.noticia.index', ['listado' => $listado]);
     }
 
     /**
@@ -45,11 +47,12 @@ class NoticiaController extends Controller
     }
     
     public function show($id){
-        $noticia    = session()->get($id);
-        $titulo     = $noticia['titulo'];
-        $cuerpo     = $noticia['cuerpo'];
-
-        return '<h1>' . $titulo . '</h1><br><p>' . $cuerpo . '</p>';
+        $noticia    = (object) array(
+            'titulo'=> 'Titulo de la noticia',
+            'cuerpo'=> 'Cuerpo de la noticia',
+            'id'    => $id
+        );
+        return view('backend.noticia.show' , ['noticia' => $noticia]);
     }
 
     /**
